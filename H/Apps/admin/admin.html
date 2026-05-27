@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocumentX</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+        header {
+            padding: 2rem 1.5rem;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+            color: #111827;
+        }
+        header p {
+            margin: 0;
+            color: #4b5563;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        .overview {
+            display: grid;
+            gap: 1.5rem;
+            padding: 2rem 1.5rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            background: #ffffff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.12);
+        }
+        .tool-banner {
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        .tool-image {
+            min-height: 180px;
+            background: linear-gradient(180deg, #eef2ff 0%, #eff6ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 0.9rem;
+        }
+        .tool-card-content {
+            padding: 1.5rem 1.25rem 1.75rem;
+        }
+        .tool-card-content h2 {
+            margin: 0 0 0.75rem;
+            font-size: 1.35rem;
+        }
+        .tool-card-content p {
+            margin: 0;
+            color: #475569;
+            line-height: 1.7;
+        }
+        @media (min-width: 720px) {
+            .overview {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 1080px) {
+            .overview {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin-Tool Übersicht</h1>
+        <p>Wähle ein Tool für weitere Aktionen. Jeder Eintrag enthält Bild, Banner, Titel und kurze Beschreibung.</p>
+    </header>
+    <main class="overview">
+        <a class="tool-card" href="/admins/TrofyBETA">
+            <div class="tool-banner">Trofy BETA</div>
+            <img src="/img/TROPFIES.jpg" alt="Trofy BETA Bild">
+            <div class="tool-card-content">
+                <h2>Trofy BETA</h2>
+                <p>Vergleiche 2 verschiedene Nutzer für PSN profile</p>
+            </div>
+        </a>
+        <a class="tool-card" href="/admins/UserManagement">
+            <div class="tool-banner">Benutzerverwaltung</div>
+            <img src="/img/UserManagement.png" alt="Benutzerverwaltung Bild">
+            <div class="tool-card-content">
+                <h2>Benutzerverwaltung</h2>
+                <p>Verwalte Benutzerkonten und Berechtigungen</p>
+            </div>
+        </a>
+    </main>
+</body>
+</html>

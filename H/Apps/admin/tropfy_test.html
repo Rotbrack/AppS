@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>PSN Vergleich</title>
+  <style>
+body {
+  font-family: Arial;
+  background: #111;
+  color: white;
+  padding: 20px;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+
+.column {
+  width: 50%;
+}
+
+.card {
+  background: #1e1e1e;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.game {
+  cursor: pointer;
+}
+
+.game:hover {
+  background: #333;
+}
+
+.search {
+  margin-bottom: 20px;
+} 
+  </style>
+
+</head>
+<body>
+
+<h1>🏆 PSN Trophy Vergleich</h1>
+
+<div class="search">
+  <input id="searchInput" placeholder="Spieler suchen..." />
+  <button onclick="searchUser()">Laden</button>
+</div>
+
+<div class="container">
+  <!-- USER 1 (Fix) -->
+  <div class="column">
+    <h2>👤 Nutzer X (Du)</h2>
+    <div id="profile1"></div>
+    <div id="summary1"></div>
+    <div id="games1"></div>
+    <div id="trophies1"></div>
+  </div>
+
+  <!-- USER 2 (Suchbar) -->
+  <div class="column">
+    <h2>🔎 Gesuchter Nutzer</h2>
+    <div id="profile2"></div>
+    <div id="summary2"></div>
+    <div id="games2"></div>
+    <div id="trophies2"></div>
+  </div>
+</div>
+
+<script>
+    const API = "http://localhost:3000/api/psn";
+
+// Nutzer 1 = FIX
+let user1 = "Geevexx";
+
+// Nutzer 2 = dynamisch
+let user2 = null;
+
+// ==========================
+// INIT
+// ==========================
+window.onload = async () => {
+  await fetch(`${API}/auth/load-token`);
+
+  // Nutzer 1 immer laden
+  loadUser(user1, 1);
+};
+
+// ==========================
+// USER LADEN
+// ==========================
+async function loadUser(accountId, slot) {
+  loadProfile(accountId, slot);
+  loadSummary(accountId, slot);
+  loadGames(accountId, slot);
+}
+
+// ==========================
+// PROFIL
+// ==========================
+async function loadProfile(accountId, slot) {
+  let profile;
+
+  if (accountId === "me") {
+    profile = { onlineId: "Du selbst" };
+  } else {
+    const res = await fetch(`${API}/profile/${accountId}`);
+    const data = await res.json();
+    profile = data.profile || data;
+  }
+
+  document.getElementById(`profile${slot}`).innerHTML = `
+    <div class="card">
+      <b>${profile.onlineId}</b>
+    </div>
+  `;
+}
+
+// ==========================
+// SUMMARY
+// ==========================
+async function loadSummary(accountId, slot) {
+  const url = accountId === "me"
+    ? `${API}/me/trophy-summary`
+    : `${API}/user/${accountId}/trophy-summary`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  const t = data.trophySummary;
+
+  document.getElementById(`summary${slot}`).innerHTML = `
+    <div class="card">
+      Level: ${t.trophyLevel}<br>
+      🥇 ${t.earnedTrophies.platinum}
+      🥈 ${t.earnedTrophies.gold}
+      🥉 ${t.earnedTrophies.silver}
+      ⚪ ${t.earnedTrophies.bronze}
+    </div>
+  `;
+}
+
+// ==========================
+// SPIELE
+// ==========================
+async function loadGames(accountId, slot) {
+  const url = accountId === "me"
+    ? `${API}/me/titles`
+    : `${API}/user/${accountId}/titles`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const div = document.getElementById(`games${slot}`);
+  div.innerHTML = "";
+
+  data.trophyTitles.forEach(game => {
+    const el = document.createElement("div");
+    el.className = "card game";
+    el.innerHTML = `🎮 ${game.trophyTitleName} (${game.progress}%)`;
+
+    el.onclick = () => loadTrophies(accountId, game.npCommunicationId, slot);
+
+    div.appendChild(el);
+  });
+}
+
+// ==========================
+// TROPHIES
+// ==========================
+async function loadTrophies(accountId, titleId, slot) {
+  const url = accountId === "me"
+    ? `${API}/me/trophies/${titleId}`
+    : `${API}/user/${accountId}/trophies/${titleId}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const div = document.getElementById(`trophies${slot}`);
+  div.innerHTML = "";
+
+  data.trophies.forEach(t => {
+    const el = document.createElement("div");
+    el.className = "card";
+
+    el.innerHTML = `
+      <b>${t.trophyName}</b><br>
+      ${t.earned ? "✅" : "❌"}
+    `;
+
+    div.appendChild(el);
+  });
+}
+
+// ==========================
+// SUCHE → USER 2
+// ==========================
+async function searchUser() {
+  const q = document.getElementById("searchInput").value;
+  if (!q) return;
+
+  const res = await fetch(`${API}/search?q=${q}`);
+  const data = await res.json();
+
+  const user = data.domainResponses?.[0]?.results?.[0];
+  if (!user) return;
+
+  user2 = user.accountId;
+
+  loadUser(user2, 2);
+}
+</script>
+</body>
+</html>
