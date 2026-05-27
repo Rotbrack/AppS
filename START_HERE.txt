@@ -1,0 +1,186 @@
+╔════════════════════════════════════════════════════════════════╗
+║          H APPS - ELECTRON EXPORT ANLEITUNG (KURZFASSUNG)      ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ WAS WURDE GEMACHT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[✓] electron.js              - Electron Main Process erstellt
+[✓] preload.js               - IPC Security Bridge erstellt
+[✓] package.json             - Mit Electron & Build Config aktualisiert
+[✓] Alle Assets eingebunden  - H/, api/, psn_accountToken.json
+[✓] Build Scripts eingebunden- npm run build:win
+[✓] Dokumentation erstellt   - README.md, EXPORT_GUIDE.md, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 EXPORT IN 3 SCHRITTEN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCHRITT 1: PowerShell Execution Policy (NUR EINMALIG!)
+────────────────────────────────────────────────────────
+
+Öffne PowerShell und führe aus:
+
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Bestätige mit [Y] Enter
+
+
+SCHRITT 2: Dependencies installieren
+─────────────────────────────────────
+
+Öffne Terminal / CMD im Projekt-Verzeichnis:
+
+    cd "c:\Users\LLiet\OneDrive - Rotbracks Team\Interne APPs\H_Apps"
+    npm install
+
+Warte bis der Prozess fertig ist (~2-5 Minuten)
+
+
+SCHRITT 3: App bauen & exportieren
+───────────────────────────────────
+
+Folgende Optionen (wähle eine):
+
+Option A - EMPFOHLEN (alle Formate):
+    npm run build:win
+
+Option B - Nur Portable EXE:
+    npx electron-builder --win portable
+
+Option C - Mit Batch-Skript:
+    .\build.bat
+
+
+Warte bis fertig (kann 2-10 Minuten dauern)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 ERGEBNIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Die fertig gebauten Dateien findest du hier:
+
+    H_Apps\dist\
+
+Darin:
+    
+    ✓ H Apps-1.0.0-portable.exe  
+      → Portable Version (keine Installation nötig)
+      → Kann direkt verteilt werden
+      → ~300-400 MB groß
+
+    ✓ H Apps Setup 1.0.0.exe
+      → Installer (klassische Installation)
+      → Benutzer können selbst Installationsort wählen
+      → ~150-200 MB groß
+
+    ✓ unpacked/
+      → Interne Daten (nicht nötig zum Verteilen)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 ZUM VERTEILEN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Kopiere die .exe Dateien wohin du möchtest:
+
+Option 1: NUR Portable (EMPFOHLEN)
+    "H Apps-1.0.0-portable.exe"
+    
+    → Einfach an Nutzer verteilen
+    → Doppelklick = läuft sofort
+    → Keine Admin-Rechte nötig
+
+Option 2: Mit Installer
+    "H Apps Setup 1.0.0.exe"
+    
+    → Benutzer führt Installer aus
+    → Kann aus deinstalliert werden
+    → Schöner für Unternehmen
+
+Option 3: Beide
+    Beide EXE Dateien verteilen und User können wählen
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️ WAS PASSIERT, WENN USER DIE APP STARTET:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. EXE wird gestartet
+2. Express Server startet automatisch im Hintergrund
+3. Electron Fenster öffnet sich
+4. App lädt von http://localhost:3000
+5. Fertig!
+
+Der User merkt NICHTS davon dass im Hintergrund Node.js läuft.
+Alles ist in einer Datei enthalten.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 VORHER TESTEN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bevor du die App verteilst, teste sie lokal:
+
+    npm start
+
+Das sollte:
+    1. Express Server starten
+    2. Electron Fenster öffnen
+    3. App laden unter http://localhost:3000
+    4. Alle Features sollten funktionieren
+
+Wenn das funktioniert → Ready to Export!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ HÄUFIGE FRAGEN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+F: Kann ich die Versionsnummer ändern?
+A: Ja! In package.json: "version": "1.0.0" → "1.1.0"
+   Dann nochmal npm run build:win
+
+F: Kann ich das App-Icon ändern?
+A: Ja! Speichere icon.ico in /assets/ Ordner
+   Dann nochmal bauen (wird automatisch verwendet)
+
+F: Kann ich den App-Namen ändern?
+A: Ja! In package.json: "productName": "H Apps" → "Mein Name"
+
+F: Wie groß wird die App?
+A: ~300-400 MB (alles inklusive Node.js + Dependencies)
+
+F: Brauchen Nutzer Administrator-Rechte?
+A: Nein! Portable EXE läuft ohne Admin-Rechte
+   Installer EXE könnte Admin fragen, das ist ok
+
+F: Was ist in der EXE enthalten?
+A: Alles! Node.js Runtime + Express Server + HTML/CSS/JS + Assets
+   Eine standalone Datei!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 FEHLER?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Siehe: TROUBLESHOOTING.md
+
+Oder versuche schnell diesen Befehl:
+
+    npm run build:win 2>&1 | tee build-log.txt
+
+Das speichert alle Fehler in build-log.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ FERTIG!
+
+Deine Electron App ist jetzt exportierbar.
+Die EXE Dateien in /dist/ sind ready to ship!
+
+Viel Spaß! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

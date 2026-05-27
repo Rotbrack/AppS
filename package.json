@@ -1,0 +1,78 @@
+{
+  "name": "rotbracks-m-apps",
+  "version": "1.0.11",
+  "description": "Rotbracks M Apps - Desktop Gateway",
+  "main": "electron.js",
+  "homepage": "./",
+  "type": "commonjs",
+  "author": "Rotbracks Team",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^5.2.1",
+    "exceljs": "^3.4.0",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "fs": "^0.0.1-security",
+    "psn-api": "^2.18.0"
+  },
+  "devDependencies": {
+    "electron": "^42.2.0",
+    "electron-builder": "^26.8.1",
+    "electron-is-dev": "^3.0.1"
+  },
+
+  "build": {
+    "appId": "com.rotbracks.mapps.desktop",
+    "productName": "Rotbracks M Apps",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "icon": "assets/icon.ico",
+    "files": [
+      "electron.js",
+      "preload.js",
+      "index.js",
+      "psnService.js",
+      "e.js",
+      "H/**/*",
+      "api/**/*",
+      "psn_accountToken.json",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.exe"
+    }
+  },
+  "keywords": [],
+  "license": "ISC"
+}

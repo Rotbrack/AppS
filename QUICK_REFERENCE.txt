@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════════╗
+║        H APPS - QUICK REFERENCE (COPY & PASTE READY)             ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+📋 SCHRITT 1 - EXEC POLICY (PowerShell, EINMALIG)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+→ Bestätige mit [Y] und Enter
+
+
+📋 SCHRITT 2 - DEPENDENCIES INSTALLIEREN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd "c:\Users\LLiet\OneDrive - Rotbracks Team\Interne APPs\H_Apps"
+npm install
+
+→ Warte 2-5 Minuten
+
+
+📋 SCHRITT 3 - BUILD & EXPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm run build:win
+
+→ Warte 2-10 Minuten
+→ Ergebnis in: H_Apps\dist\
+
+
+📋 RESULT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Deine Dateien zum Verteilen:
+
+  H_Apps\dist\H Apps-1.0.0-portable.exe    ← DIESE VERWENDEN!
+  H_Apps\dist\H Apps Setup 1.0.0.exe       ← (oder diese)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 ZUM TESTEN VORHER (OPTIONAL):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm start
+
+→ App öffnet sich
+→ Stelle sicher alles funktioniert
+→ CTRL+C um zu beenden
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚡ SCHNELL-BEFEHLE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm start                  # App lokal starten zum Testen
+npm run build:win          # Build & Export als EXE
+npm run dist               # Alternative zum Bauen
+.\build.bat                # Build via Batch-Skript
+
+# Wenn was nicht funktioniert:
+rm -r node_modules
+rm package-lock.json
+npm install
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📂 DATEI-STRUKTUR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+H_Apps/
+├── electron.js              ✓ Main Electron Process
+├── preload.js               ✓ Security Bridge
+├── index.js                 ✓ Express Server
+├── psnService.js            ✓ PSN API
+├── package.json             ✓ Konfiguration & Build
+├── H/                       ✓ UI Dateien
+├── api/                     ✓ API Dateien
+├── dist/                    📦 (Generiert) Ergebnis
+├── node_modules/            📦 (Generiert) Dependencies
+├── README.md                ℹ️  Dokumentation
+├── EXPORT_GUIDE.md          ℹ️  Kurz-Anleitung
+├── TROUBLESHOOTING.md       ℹ️  Fehlersuche
+├── START_HERE.txt           ℹ️  Detaillierte Anleitung
+└── CHECKLIST.txt            ℹ️  Validierungs-Checkliste
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 ENDPRODUNKT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Portable EXE:
+  ✓ Größe: ~300-400 MB
+  ✓ Installation: Keine nötig
+  ✓ Admin-Rechte: Nicht nötig
+  ✓ Verteilen: Einfach kopieren
+  ✓ Start: Doppelklick und läuft sofort
+
+Was ist drin:
+  ✓ Node.js Runtime
+  ✓ Express Server
+  ✓ Alle HTML/CSS/JS Dateien
+  ✓ Alle Assets
+  ✓ Azure AD Integration
+  ✓ PSN API Integration
+  ✓ Alles in EINER Datei!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ FAQ:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+F: Muss ich git benutzen?
+A: Nein! Alles lokal. .gitignore ist nur zur Sicherheit.
+
+F: Welche Version sollte ich verteilen?
+A: Die Portable EXE ist am einfachsten.
+
+F: Kann ich mehrere Versionen haben?
+A: Ja! Ändere package.json "version" und baue nochmal.
+
+F: Geht das auch für macOS/Linux?
+A: Nein, diese Config ist nur für Windows.
+   Aber mit Anpassungen ja, frag mich!
+
+F: Wie updatet man die App später?
+A: Einfach neue Version bauen und verteilen.
+
+F: Kann ich noch Dateien hinzufügen?
+A: Ja! In package.json → build → files
+   Dann nochmal npm run build:win
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ FERTIG!
+
+Alle Dateien sind vorbereitet. Folge einfach den Schritten oben!
+
+Viel Erfolg! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

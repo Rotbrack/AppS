@@ -1,0 +1,1 @@
+call cd "c:\Users\LLiet\OneDrive - Rotbracks Team\Interne APPs\H_Apps" ; .\node_modules\.bin\electron.cmd .
