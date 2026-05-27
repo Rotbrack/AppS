@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kontaktbuch - Robracksteam</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchUsersAndPopulate(null);
+  const tableBody = document.getElementById("contacts-table-body");
+  const headerrow = document.getElementById("headerrow");
+  const Or = window.origin || window.location.origin;
+  const departmentTasks = {
+    "R.T-H 1": "Allgemeines Personal für Rotbracks Team",
+    "R.V-H 1": "Verwaltungs Personal - Verantwortlich für die überwachung von neuen Personalen Anfragen und allgemeine Verwaltungstätigkeiten",
+    "R.V-H 2": "Supportabteilung - Verantwortlich für alle Anfragen an Rotbracks Team (Extern)",
+    "R.V-H 3": "Vertrieb - Vermarktung/PR Abteilung",
+    "R.V-H 4": "Finanzen - Buchhaltung/Controlling Abteilung",
+    "R.UF.H-E 1": "UEFN DEVteam Creators - Verantwortlich für die Erstellung von UEFN Inhalten (begrenzt auf Props/Assets)",
+    "R.UF.H-E 2": "UEFN DEVteam Developer - Verantwortlich für die Erstellung von UEFN Inhalten, auch Verse Scripte und komplexe Mechaniken",
+    "R.UF.H-A 1": "UEFN DEVteam Adminstartor/Teamleitung - Verantwortlich für die Administration und Leitung aller Mitarbeitenden die mit UEFN arbeiten/mitabeiten",
+    "R.UF.H 1": "UEFN DEVteam Controling - Verantwortlich für die Überwachung und Qualitätssicherung aller UEFN Inhalte",
+  };
+  
+  function cleanUrl() {
+    try {
+      const clean =
+        window.location.origin +
+        window.location.pathname +
+        window.location.hash;
+      history.replaceState(null, "", clean);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  // Helper: populate table
+  function fetchUsersAndPopulate() {
+    fetch("/api/ms/users", {
+      method: "GET",
+
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        if (!data || !Array.isArray(data.value)) return;
+        data.value.forEach((user) => {
+          if(user.profileImage) {
+            user.profileImage = `<img src="${user.profileImage}" alt="Profile Image" style="height:32px;width:32px;border-radius:50%"></img>`;
+          }
+          const img = user.profileImage || '<i class="material-icons">person</i>';
+          const displayName = user.displayName || user.givenName || "—";
+          const surname = user.userType || "No Name";
+          const department = user.department || "—";
+          const mail = user.mail || user.userPrincipalName || "—";
+
+          tableBody.innerHTML += `
+    <tr>
+        <td class="mdl-data-table__cell--non-numeric">${img}</td>
+        <td class="mdl-data-table__cell--non-numeric">${displayName}</td>
+        <td class="mdl-data-table__cell--non-numeric">${surname}</td>
+        <td class="mdl-data-table__cell--non-numeric">${department}</td>
+        <td class="mdl-data-table__cell--non-numeric">${mail}</td>
+        <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" title="Details">
+                <i class="material-icons">info</i>
+            </button>
+        </td>
+    </tr>`;
+        });
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+    }
+
+    // Clear contacts table
+    function clearContactsTable() {
+      try { document.getElementById('contacts-table-body').innerHTML = ''; } catch (e) {}
+    }
+
+    // Fetch users by department (uses v1.0 with $filter)
+    function fetchUsersByDepartment(token, department) {
+      if (!department || department === 'ALL') {
+        // fetch all
+        clearContactsTable();
+        fetchUsersAndPopulate(token);
+        return;
+      }
+      clearContactsTable();
+      // build OData filter: department eq 'Dept'
+      const safeDept = department.replace(/'/g, "\\'");
+      const filter = `department eq '${safeDept}'`;
+      const url = `/api/ms/user/filter?q=${encodeURIComponent(filter)}`;
+
+      fetch(url, {
+        method: 'GET',
+      })
+      .then(resp => {
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        return resp.json();
+      })
+      .then(data => {
+        if (!data || !Array.isArray(data.value)) return;
+        document.getElementById('fs2').innerHTML = `
+          <div style="font-weight:bold;border-radius:15px">Aufgaben von ${safeDept} : ${departmentTasks[safeDept] || 'Allgemeine Aufgaben'}</div>
+          `;
+        data.value.forEach(user => {
+          const img = user.profileImage ? `<img src="${user.profileImage}" alt="Profile Image" style="height:32px;width:32px;border-radius:50%"></img>` : '<i class="material-icons">person</i>';
+          const displayName = user.displayName || user.givenName || '—';
+          const surname = user.userType || 'No Name';
+          const department = user.department || safeDept || '—';
+          const mail = user.mail || user.userPrincipalName || '—';
+          
+          document.getElementById('contacts-table-body').innerHTML += `
+    <tr>
+        <td class="mdl-data-table__cell--non-numeric">${img}</td>
+        <td class="mdl-data-table__cell--non-numeric">${displayName}</td>
+        <td class="mdl-data-table__cell--non-numeric">${surname}</td>
+        <td class="mdl-data-table__cell--non-numeric">${department}</td>
+        <td class="mdl-data-table__cell--non-numeric">${mail}</td>
+        <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" title="Details">
+                <i class="material-icons">info</i>
+            </button>
+        </td>
+    </tr>`;
+        });
+      })
+      .catch(err => console.error('Error fetching users by department:', err));
+    
+  }
+
+  // Department select -> fetch members for selected department
+  try {
+    const deptSelect = document.getElementById('department-select');
+    if (deptSelect) {
+      deptSelect.addEventListener('change', () => {
+        const dept = deptSelect.value;
+        if (dept === 'ALL') {
+          clearContactsTable();
+          fetchUsersAndPopulate(null);
+        } else {
+          fetchUsersByDepartment(null, dept);
+        }
+      });
+    }
+  } catch (e) { /* ignore */ }
+
+});
+
+
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background-color: #f9fafb;
+        }
+        header {
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+        }
+        header p {
+            margin: 0;
+            color: #6b7280;
+        }
+        .overview {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .tool-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            background: #ffffff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.12);
+        }
+        .tool-banner {
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        .tool-image {
+            min-height: 180px;
+            background: linear-gradient(180deg, #eef2ff 0%, #eff6ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+
+    </style>
+  </head>
+
+  <body>
+    <!-- Simple header with fixed tabs. -->
+      </header>
+      <div class="mdl-layout__drawer" id="headerrow">
+        <span class="mdl-layout-title">Kontaktbuch - Robracksteam</span> <a href="/"><Button>Startseite</Button></a>
+      </div>
+      <main class="mdl-layout__content">
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+          <div class="page-content" style="padding: 5px;">
+            <div id="fs2"></div>
+            <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <label for="department-select" style="font-weight:600">Abteilung:</label>
+              <select id="department-select" class="mdl-textfield__input">
+                <option value="ALL">Alle Abteilungen</option>
+                <option value="R.T-H 1">R.T-H 1 (Personal - Rotbracks Team)</option>
+                <option value="R.V-H 1">R.V-H 1 (Verwaltungs Personal)</option>
+                <option value="R.V-H 2">R.V-H 2 (Support)</option>
+                <option value="R.V-H 3">R.V-H 3 (Vertrieb)</option>
+                <option value="R.V-H 4">R.V-H 4 (Finanzen)</option>
+                <option value="R.UF.H-E 1">R.UF.H-E 1 (UEFN DEVteam Creators)</option>
+                <option value="R.UF.H-E 2">R.UF.H-E 2 (UEFN DEVteam Developer)</option>
+                <option value="R.UF.H-A 1">R.UF.H-A 1 (UEFN DEVteam Adminstartor/Teamleitung)</option>
+                <option value="R.UF.H 1">R.UF.H 1 (UEFN DEVteam Allgemeines Personal)</option>
+                
+              </select>
+            </div>
+            <table
+              class="mdl-data-table mdl-js-data-table mdl-shadow--2dp"
+              style="width: 100%"
+            >
+              <thead>
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric">&nbsp;</th>
+                  <th class="mdl-data-table__cell--non-numeric">Vorname</th>
+                  <th class="mdl-data-table__cell--non-numeric">Nutzer Typ</th>
+                  <th class="mdl-data-table__cell--non-numeric">Abteilung</th>
+                  <th class="mdl-data-table__cell--non-numeric">Email</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="contacts-table-body">
+                <!-- Beispiel-Zeile; ersetze/fülle mit dynamischen Daten via JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </body>
+</html>
