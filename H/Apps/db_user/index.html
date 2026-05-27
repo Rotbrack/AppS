@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Generator</title>
+</head>
+<body>
+
+<h2>Datei erstellen</h2>
+
+<label>Dateiname:</label>
+<input type="text" id="filename" placeholder="Projektname">
+
+<h3>Material auswählen:</h3>
+
+<div id="list"></div>
+
+<button onclick="generate()">Erstellen</button>
+
+<script>
+const materials = [
+    { name: "Schütz", type: "Elektro", qty: 1 },
+    { name: "Relais", type: "Elektro", qty: 2 },
+    { name: "Klemme", type: "Verbindung", qty: 10 },
+    { name: "Sicherung", type: "Schutz", qty: 3 }
+];
+
+const listDiv = document.getElementById("list");
+
+// ✅ Liste anzeigen
+materials.forEach((item, index) => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "item_" + index;
+
+    const label = document.createElement("label");
+    label.innerText = `${item.name} (${item.type})`;
+
+    listDiv.appendChild(checkbox);
+    listDiv.appendChild(label);
+    listDiv.appendChild(document.createElement("br"));
+});
+
+// ✅ Daten senden
+async function generate() {
+    const fileName = document.getElementById("filename").value;
+
+    const selected = [];
+    materials.forEach((item, index) => {
+        if (document.getElementById("item_" + index).checked) {
+            selected.push(item);
+        }
+    });
+
+    const response = await fetch("/generate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            fileName: fileName,
+            items: selected
+        })
+    });
+
+    const result = await response.json();
+    alert(JSON.stringify(result, null, 2));
+}
+</script>
+
+</body>
+</html>
